@@ -33,8 +33,8 @@ env.start()
 results = []
 
 for _ in tqdm(range(N_ITERS)):
-    A = [np.zeros((N, N)) for _ in batch_size]
-    B = [np.zeros((N, N)) for _ in batch_size]
+    A = [np.zeros((N, N)) for _ in range(batch_size)]
+    B = [np.zeros((N, N)) for _ in range(batch_size)]
 
     for k in range(batch_size):
         for i in range(N):

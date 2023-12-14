@@ -41,5 +41,4 @@ for _ in tqdm(range(N_ITERS)):
         
     result = nash_support(A, B, N, env, batch_size=batch_size)
     results.append(result)
-
-np.save(output_file, np.array(results))
+    np.save(output_file, np.array(results))

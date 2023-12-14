@@ -10,6 +10,7 @@ parser.add_argument("--N_ITERS", type=int, required=True)
 parser.add_argument("--rho", type=float, required=True)
 parser.add_argument("--output_file", required=True)
 parser.add_argument("--batch_size", type=int, default=1)
+parser.add_argument("--cap", type=int, default=-1)
 args = parser.parse_args()
 
 N = args.N
@@ -17,6 +18,10 @@ rho = args.rho
 N_ITERS = args.N_ITERS
 output_file = args.output_file
 batch_size = args.batch_size
+cap = args.cap
+
+if cap > 0 and batch_size > 1:
+    print("WARN: batch size automatically set to 1 due to cap")
 
 n_feasible = 0
 n_majorized = 0
@@ -38,8 +43,11 @@ for _ in tqdm(range(N_ITERS)):
                 [[x, y]] = np.random.multivariate_normal([0, 0], [[1, rho], [rho, 1]], 1)
                 A[k][i, j] = x
                 B[k][i, j] = y
-        
-    result = nash_support(A, B, N, env, batch_size=batch_size)
+    
+    if cap == -1:
+        result = nash_support(A, B, N, env, batch_size=batch_size)
+    else:
+        result = nash_support(A, B, N, env, cap=cap)
     results.append(result)
 
 np.save(output_file, np.array(results))

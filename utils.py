@@ -26,8 +26,8 @@ def nash_support(A, B, N, gurobienv, batch_size=1, debug=False):
         for i in range(batch_size):
             model.addConstr(A[i] @ y[i] <= vA[i])
             model.addConstr(B[i].T @ x[i] <= vB[i])
-            model.addConstr(A[i] @ y[i] >= vA[i] - Ua[i] * xignored[i])
-            model.addConstr(B[i].T @ x[i] >= vB[i] - Ub[i] * yignored[i])
+            model.addConstr(A[i] @ y[i] >= vA[i] - Ua * xignored[i])
+            model.addConstr(B[i].T @ x[i] >= vB[i] - Ub * yignored[i])
             model.addConstr(ones @ x[i] == 1)
             model.addConstr(ones @ y[i] == 1)
             model.addConstr(x[i] + xignored[i] <= 1)
@@ -46,6 +46,7 @@ def nash_support(A, B, N, gurobienv, batch_size=1, debug=False):
         if model.status == GRB.OPTIMAL:
             sol_sizes = []
             for i in range(batch_size):
+                sol_sizes.append(N - sum([xi.X for xi in xignored[i]]))
                 
         else:
             sol_sizes = [0 for _ in range(batch_size)]
